@@ -1,0 +1,223 @@
+*{
+    margin: 0;
+    padding: 0;
+    text-transform: capitalize;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.form-container{
+    background: #0D1117;
+    height: 120vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+form{
+    color: #9CA3AF;
+    background: #161B22;
+    width: 500px;
+    padding-left: 12px;
+    border: 2px solid #30363D;
+    border-radius: 10px;
+}
+h2{
+    text-align: center;
+}
+.name{
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+}
+.header{
+    margin-top: 10px;
+    color: #ffa500;
+}
+.firstname{
+    width: 50%;
+}
+.lastname{
+    width: 50%;
+}
+.email,.drop-down,.phone,.gender,.dob,.hobby,.color,.file,.range,.time,.url,.submit{
+    margin-top: 10px;
+}
+select{
+    border-radius: 5px;
+    width: 100px;
+}
+.drop-down-value select{
+    margin-right: 110px;
+}
+input{
+    color: #ffa500;
+}
+input[type="color"]{
+    border: 2px solid #ffa500;
+    width: 70px;
+}
+
+.color-value{
+    margin-right: 37%;
+}
+.file-value{
+    margin-right: 12px;
+}
+.range-value{
+    margin-right: 26%;
+}
+.time-value{
+    margin-right: 33%;
+}
+.url-value{
+    margin-right: 20%;
+}
+input[type="file"]{
+    border-radius: 10px;
+}
+input[type="time"]{
+    border: 2px solid #ffa500;
+    border-radius: 5px;
+    color: #0D1117;
+}
+input[type="url"]{
+    border: 2px solid #ffa500;
+    border-radius: 5px;
+    color: #0D1117;
+}
+input[type="date"]
+{
+    color: #161B22;
+    border-radius: 5px;
+    border: 2px solid #ffa500;
+    width: 43%;
+}
+input:focus {
+  border-color: #1F6FEB;
+  box-shadow: 0 0 0 2px #1F6FEB;
+  outline: none;
+}
+input[type="email"],
+input[type="number"]
+{
+    border-radius: 5px;
+    width: 90%;
+    margin: 2px;
+    padding: 8px;
+    border: 2px solid #30363D;
+    background-color: #0D1117;
+}
+input[type="text"]{
+    border-radius: 5px;
+    width: 80%;
+    margin: 2px;
+    padding: 8px;
+    border: 2px solid #30363D;
+    background-color: #0D1117;
+}
+label[for="firstname"],
+label[for="lastname"],
+label[for="email"],
+label[for="phone"],
+label[for="gender"],
+label[for="dob"],
+label[for="hobby"],
+label[for="color"],
+label[for="file"],
+label[for="range"],
+label[for="time"],
+label[for="url"],
+label[for="drop-down"]{
+    margin-left: 5px;
+}
+label{
+    color: #E6EDF3;
+}
+label[for="male"],
+label[for="female"],
+label[for="cricket"],
+label[for="singing"],
+label[for="dancing"]
+{
+    color: #ffa500;
+    font-weight: 500;
+}
+.dob,.color,.file,.range,.time,.url,.drop-down{
+    display: flex;
+    justify-content: space-between;
+}
+.drop-down-value{
+    margin-right: 10%;
+}
+.dob input{
+    margin-right: 35px;
+}
+.gender{
+    display: flex;
+    justify-content: space-between;
+}
+.g-value{
+    width: 50%;
+}
+.hobby{
+    display: flex;
+    justify-content: space-between;
+}
+.hobby-value{
+    margin-right: 35%;
+}
+#female{
+    margin-left: 20px;
+}
+.submit{
+    margin-bottom: 25px;
+}
+button{
+    padding: 8px;
+    width: 93%;
+    margin-left: 3px;
+    border-radius: 5px;
+    background-color: #238636;
+    color: #FFFFFF;
+    border:1px solid #238636;
+    font-weight: 500;
+    transition: 200ms;
+}
+button:hover{
+    background: #2EA043;
+    border:1px solid wheat;
+    color: wheat;
+}
+.error-message{
+    color: red;
+    font-weight: 500;
+    margin: 10px;
+    text-align: center;
+    margin-right: 40px;
+}
+
+@media (max-width:552px) {
+    form{
+       margin: 0 10px; 
+    }
+    .dob input{
+        margin-right: 20px;
+    }
+    .hobby-value{
+        margin-right: 25%;
+    }
+    .color-value{
+        margin-right: 28%;
+    }
+    .range-value{
+        margin-right: 10%;
+    }
+    .time-value{
+        margin-right: 20%;
+    }
+    .url-value{
+        margin-right: 6px;
+    }
+    .drop-down-value select{
+        margin-right: 33px;
+    }
+}

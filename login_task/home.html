@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="home.css">
+    <title>home page</title>
+</head>
+<body>
+
+    <div class="main-container">
+        <div class="video-container">
+            <h2>video</h2>
+            
+            <div style="display: flex; justify-content: center; margin-top: 10px;">
+                <video controls  loop height="200px" width="300px">
+                    <source src="../../video/Hipo Bhai Bike 2 with Audio.mp4">
+                </video>
+            </div>
+
+        </div>
+        <div class="audio-container">
+            <h2>audio</h2>
+            <div style="display: flex; justify-content: center; margin-top: 10px;">
+                <audio controls >
+                    <source src="../../video/Hipobhai in Shop.mp4">
+                </audio>
+            </div>
+        </div>
+        <div class="image-container">
+            <h2>image</h2>
+
+            <div style="display: flex; justify-content: center; margin-top: 10px;">
+                <input type="file" accept=".png" onchange="showImage(event)">
+            </div>
+
+            <div style="display: flex; justify-content: center;">
+                <img id="preview-image" style="display: none; height: 150px; width: 150px;">
+            </div>
+
+        </div>
+    </div>
+
+    <script src="home.js"></script>
+</body>
+</html>

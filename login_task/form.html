@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="form.css">
+    <title>login</title>
+</head>
+<body>
+
+        <div class="form-container">
+            <form action="./home.html" method="post" onsubmit="handleForm(event)">
+
+                <div class="header">
+                    <h2>Profile Form</h2>
+                </div>
+                
+                <p class="error-message"></p>
+                
+                <div class="name">
+                    <div class="firstname">
+                        <label for="firstname">firstname</label><br>
+                        <input type="text" id="firstname" placeholder="enter firstname here.." required>
+                        <div class="error" id="firstname-e"></div>
+                    </div>
+                    
+                    <div class="lastname">
+                        <label for="lastname">lastname</label><br>
+                        <input type="text" id="lastname" placeholder="enter lastname here.." required>
+                        <div class="error" id="lastname-e"></div>
+                    </div>
+                </div>
+
+                <div class="email">
+                    <label for="email">email</label><br>
+                    <input type="email" id="email" placeholder="enter email here.." required>
+                    <div class="error" id="email-e"></div>
+                </div>
+
+                <div class="phone">
+                    <label for="phone">Phone No</label><br>
+                    <input type="number" id="phone" placeholder="enter phone here.." required>
+                    <div class="error" id="phone-e"></div>
+                </div>
+
+                <div class="gender">
+                    <div class="g-label">
+                        <label for="gender">Gender</label>
+                    </div>
+
+                    <div class="g-value">
+                        <input type="radio" id="male" name="gender" value="male" checked>
+                        <label for="male">male</label>
+                        <input type="radio" id="female" name="gender">
+                        <label for="female">female</label>
+                    </div>
+                </div>
+                <div class="error" id="gender-e"></div>
+
+                <div class="dob">
+                    <label for="dob">Date of Birth</label>
+                    <input type="date" name="dob" id="date" required>
+                </div>
+
+                <div class="hobby">
+                    <div class="habby-label">
+                        <label for="hobby">Select Your Hobby</label>
+                    </div>
+                    <div class="hobby-value">
+                        <input type="checkbox" name="hobby" id="">
+                        <label for="cricket">cricket</label><br>
+                        <input type="checkbox" name="hobby" id="">
+                        <label for="singing">singing</label><br>
+                        <input type="checkbox" name="hobby" id="">
+                        <label for="dancing">dancing</label>
+                    </div>
+                </div>
+
+                <div class="color">
+                    <div class="color-label">
+                        <label for="color">Your Favriout Color</label>
+                    </div>
+                    <div class="color-value">
+                        <input type="color" name="color">
+                    </div>
+                </div>
+                
+                <div class="file">
+                    <div class="file-label">
+                        <label for="file">Select File (multiple)</label>
+                    </div>
+                    <div class="file-value">
+                        <input type="file" name="file" multiple required>
+                    </div>
+                </div>
+
+                <div class="file">
+                    <div class="file-label">
+                        <label for="file">Select File (jpg,png)</label>
+                    </div>
+                    <div class="file-value">
+                        <input type="file" name="file" accept=".jpg,.png" required>
+                    </div>
+                </div>
+
+
+                <div class="range">
+                    <div class="range-label">
+                        <label for="range">Your Knowlage</label>
+                    </div>
+                    <div class="range-value">
+                        <input type="range" name="range" min="0" max="100" value="10" step="10" required >
+                    </div>
+                </div>
+
+                <div class="time">
+                    <div class="time-label">
+                        <label for="time">Current Time</label>
+                    </div>
+                    <div class="time-value">
+                        <input type="time" name="time" required>
+                    </div>
+                </div>
+
+                <div class="url">
+                    <div class="url-label">
+                        <label for="url">Website URL</label>
+                    </div>
+                    <div class="url-value">
+                        <input type="url" name="url" placeholder="enter url" required>
+                    </div>
+                </div>
+
+                <div class="drop-down">
+                    <div class="drop-down-label">
+                        <label for="drop-down">Course</label>
+                    </div>
+                    <div class="drop-down-value">
+                        <select name="drop-down">
+                            <option value="select" >select</option>
+                            <option value="BBA">BBA</option>
+                            <option value="BCA">BCA</option>
+                            <option value="B-COM">B-COM</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="submit">
+                    <button type="submit">submit</button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+    <script src="form.js"></script>
+</body>
+</html>
