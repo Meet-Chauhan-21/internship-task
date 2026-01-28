@@ -7,5 +7,18 @@ export const registrationForm = Yup.object({
     phone: Yup.string().matches(/^[0-9]{10}$/, "phone must be 10 digits").required("phone is required"),
     password: Yup.string().min(6,"minimum 6 characters").required("password is required"),
     gender: Yup.string().required("gender is required"),
-    hobbies: Yup.array().min(1,"select al least one hobby")
+    hobbies: Yup.array().min(1,"select al least one hobby"),
+    course: Yup.string().required("course is required"),
+    image: Yup.mixed()
+    .required("Image is required")
+    .test("fileType", "Only JPG or PNG allowed", (value) => {
+      if (!value) return false;
+      return value instanceof File &&
+        ["image/jpeg", "image/png"].includes(value.type);
+    })
+    .test("fileSize", "Image size must be less than 2MB", (value) => {
+      if (!value) return false;
+      return value instanceof File && value.size <= 2 * 1024 * 1024;
+    })
+
 }) 
