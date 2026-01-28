@@ -1,0 +1,28 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+*{
+  margin: 0;
+  padding: 0;
+}
+body{
+  background-color: #242424;
+  /* color: azure; */
+}
+
+
+/* Registraton-form page */
+@media (max-width:376px) {
+    #registration-form{
+      margin: 10px;
+      width: 100%;
+    }
+    #registration-form input:is([type="text"],[type="email"],[type="password"],[type="phone"]){
+      /* margin-left: 40px; */
+      width: 92%;
+    }
+    #registration-form input[type="submit"]{
+      width: 92%;
+    }
+}
