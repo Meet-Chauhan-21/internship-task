@@ -1,13 +1,10 @@
 import { useFormik } from "formik";
 import { registrationForm } from "../utils/validation";
-import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Register = () => {
-  const [formData, setFormData] = useState({});
 
-  useEffect(() => {
-    console.log("Form data value : ", formData);
-  }, [formData]);
+  const navigate = useNavigate()
 
   const formkit = useFormik({
     initialValues: {
@@ -25,9 +22,11 @@ const Register = () => {
     validationSchema: registrationForm,
 
     onSubmit: (value) => {
-      setFormData(Object.entries(value));
-      console.log("Form value : ", value);
+      const data = Object.fromEntries(Object.entries(value));
       alert("form submitted..!");
+      navigate("/home", {
+        state: data
+      })
     },
   });
 
