@@ -7,6 +7,7 @@ import UseReducer from "./components/UseReducer";
 import UseMemo from "./components/UseMemo";
 import UseRef from "./components/UseRef";
 import UserContext from "./context/UserContextProvider";
+import UseLayout from "./components/UseLayout";
 
 function App() {
   
@@ -82,6 +83,15 @@ function App() {
             >
             useRef
           </button>
+          <br />
+          <button
+            className="text-xl font-semibold text-blue-400 border-2 m-2 px-3 py-2 transition-all hover:bg-slate-200 hover:text-[#242424] rounded-md"
+            onClick={() => {
+              setShow("useLayout");
+            }}
+            >
+            useLayout
+          </button>
         </div>
 
         {show === "useState" && <UseState />}
@@ -91,6 +101,7 @@ function App() {
         {show === "useReducer" && <UseReducer />}
         {show === "useMemo" && <UseMemo />}
         {show === "useRef" && <UseRef />}
+        {show === "useLayout" && <UseLayout />}
 
       </div>
       

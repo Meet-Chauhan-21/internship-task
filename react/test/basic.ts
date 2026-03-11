@@ -1,1 +1,0 @@
-console.log("this work in TypeScript...")
