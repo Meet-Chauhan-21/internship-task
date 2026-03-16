@@ -3,7 +3,10 @@ import { addData, removeData } from "../redux/data/dataSlice";
 import { useState } from "react";
 
 function ReduxExample() {
+
   const users = useSelector((s: any) => s.userData.data);
+  const marks = useSelector((s: any)=> s.marks.marks);
+
   const dispatch = useDispatch();
 
   const [formData, setFormData] = useState({
@@ -11,6 +14,8 @@ function ReduxExample() {
     name: "",
     rno: ""
   });
+
+  const [selectedRno, setSelectedRno] = useState<number | null>(null);
 
   const handleChange = (e: any) => {
     const { name, value } = e.target;
@@ -34,6 +39,10 @@ function ReduxExample() {
       rno: ""
     });
   };
+
+  const handelMark = (rno: number) => {
+    setSelectedRno(prev => prev === rno ? null : rno);
+  }
 
   const handleRemove = (id: number) => {
     dispatch(removeData(id));
@@ -62,17 +71,46 @@ function ReduxExample() {
               <td className="p-3 border border-gray-300">{user.name}</td>
               <td className="p-3 border border-gray-300">{user.rno}</td>
               <td className="p-3 border border-gray-300">
+
                 <button 
                   onClick={() => handleRemove(user.id)}
                   className="bg-red-500 text-white px-4 py-1 rounded hover:bg-red-600"
                 >
                   Delete
                 </button>
+                <button 
+                  onClick={() => handelMark(user.rno)}
+                  className="bg-blue-500 text-white px-4 py-1 rounded hover:bg-blue-600 ml-2"
+                >
+                  view marks
+                </button>
               </td>
             </tr>
           ))}
         </tbody>
       </table>
+      {selectedRno !== null && (
+        <table className="w-full border border-gray-300 text-center mb-6">
+          <thead className="bg-blue-800 text-white">
+            <tr>
+              <th className="p-3 border border-gray-300">Roll No</th>
+              <th className="p-3 border border-gray-300">English</th>
+              <th className="p-3 border border-gray-300">Maths</th>
+              <th className="p-3 border border-gray-300">Coding</th>
+            </tr>
+          </thead>
+          <tbody>
+            {marks.filter((mark: any) => mark.rno === selectedRno).map((mark: any) => (
+              <tr key={mark.rno} className="bg-white hover:bg-gray-100">
+                <td className="p-3 border border-gray-300">{mark.rno}</td>
+                <td className="p-3 border border-gray-300">{mark.english}</td>
+                <td className="p-3 border border-gray-300">{mark.maths}</td>
+                <td className="p-3 border border-gray-300">{mark.coding}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
 
       {/* FORM */}
       <div className="bg-white p-6 rounded-lg shadow">

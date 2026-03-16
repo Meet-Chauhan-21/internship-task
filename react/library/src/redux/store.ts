@@ -1,9 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit'
 import dataReducer from './data/dataSlice'
+import markReducer from './data/resultSlice'
 
 export const store = configureStore({
   reducer:{
-    userData : dataReducer 
+    userData : dataReducer,
+    marks : markReducer,
   }
 })
 
