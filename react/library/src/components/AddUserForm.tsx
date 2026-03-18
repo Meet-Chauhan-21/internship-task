@@ -6,9 +6,9 @@ const AddUserForm = () => {
   const dispatch = useDispatch();
 
   const [formData, setFormData] = useState({
-    id: "",
-    name: "",
     rno: "",
+    name: "",
+    course: "",
   });
 
   const handleChange = (e: any) => {
@@ -19,12 +19,12 @@ const AddUserForm = () => {
   const handleInsert = () => {
     dispatch(
       addData({
-        id: Number(formData.id),
-        name: formData.name,
         rno: Number(formData.rno),
+        name: formData.name,
+        course: formData.course,
       }),
     );
-    setFormData({ id: "", name: "", rno: "" });
+    setFormData({ rno: "", name: "", course: "" });
   };
 
   return (
@@ -37,10 +37,10 @@ const AddUserForm = () => {
         <div className="flex flex-col gap-3 mb-4">
           <input
             type="number"
-            name="id"
-            value={formData.id}
+            name="rno"
+            value={formData.rno}
             onChange={handleChange}
-            placeholder="Enter ID"
+            placeholder="Enter Roll No"
             className="border border-gray-300 p-2 rounded"
           />
           <input
@@ -51,14 +51,18 @@ const AddUserForm = () => {
             placeholder="Enter Name"
             className="border border-gray-300 p-2 rounded"
           />
-          <input
-            type="number"
-            name="rno"
-            value={formData.rno}
+          <select
+            name="course"
+            value={formData.course}
             onChange={handleChange}
-            placeholder="Enter Roll No"
             className="border border-gray-300 p-2 rounded"
-          />
+          >
+            <option value="">Select Course</option>
+            <option value="BCA">BCA</option>
+            <option value="B-COM">B-COM</option>
+            <option value="BBA">BBA</option>
+          </select>
+          
         </div>
         <button
           onClick={handleInsert}

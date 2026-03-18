@@ -1,8 +1,11 @@
 import { useDispatch, useSelector } from "react-redux";
 import { removeData } from "../redux/data/dataSlice";
+import { checkPrint as checkData } from '../redux/data/dataSlice'
+import { checkPrint } from '../redux/data/resultSlice'
 import { useState } from "react";
 import AddMarkForm from "./AddMarkForm";
 import AddUserForm from "./AddUserForm";
+import UpdateUserForm from "./UpdateUserForm";
 
 function ReduxExample() {
   const users = useSelector((s: any) => s.userData.data);
@@ -11,13 +14,24 @@ function ReduxExample() {
   const dispatch = useDispatch();
 
   const [selectedRno, setSelectedRno] = useState<number | null>(null);
+  const [selectedUser, setSelectedUser] = useState<any | null>(null);
 
   const handelMark = (rno: number) => {
     setSelectedRno((prev) => (prev === rno ? null : rno));
+    dispatch(checkData()) // call dataSlice
+    dispatch(checkPrint()) // call resultSlice
   };
   
-  const handleRemove = (id: number) => {
-    dispatch(removeData(id));
+  const handleRemove = (rno: number) => {
+    dispatch(removeData(rno));
+  };
+
+  const handleUpdate = (user: any) => {
+    setSelectedUser(user);
+  };
+
+  const handleCloseUpdate = () => {
+    setSelectedUser(null);
   };
 
   return (
@@ -30,24 +44,30 @@ function ReduxExample() {
       <table className="w-full border border-gray-300 text-center mb-6">
         <thead className="bg-gray-800 text-white">
           <tr>
-            <th className="p-3 border border-gray-300">ID</th>
-            <th className="p-3 border border-gray-300">Name</th>
             <th className="p-3 border border-gray-300">Roll No</th>
+            <th className="p-3 border border-gray-300">Name</th>
+            <th className="p-3 border border-gray-300">Course</th>
             <th className="p-3 border border-gray-300">Actions</th>
           </tr>
         </thead>
         <tbody>
           {users.map((user: any) => (
             <tr key={user.id} className="bg-white hover:bg-gray-100">
-              <td className="p-3 border border-gray-300">{user.id}</td>
-              <td className="p-3 border border-gray-300">{user.name}</td>
               <td className="p-3 border border-gray-300">{user.rno}</td>
+              <td className="p-3 border border-gray-300">{user.name}</td>
+              <td className="p-3 border border-gray-300">{user.course}</td>
               <td className="p-3 border border-gray-300 space-x-2">
                 <button
-                  onClick={() => handleRemove(user.id)}
+                  onClick={() => handleRemove(user.rno)}
                   className="bg-red-500 text-white px-4 py-1 rounded hover:bg-red-600"
                 >
                   Delete
+                </button>
+                <button
+                  onClick={() => handleUpdate(user)}
+                  className="bg-green-500 text-white px-4 py-1 m-2 rounded hover:bg-green-600"
+                >
+                  Update
                 </button>
                 <button
                   onClick={() => handelMark(user.rno)}
@@ -56,8 +76,10 @@ function ReduxExample() {
                   {selectedRno === user.rno ? "Hide Marks" : "View Marks"}
                 </button>
               </td>
+
             </tr>
           ))}
+
         </tbody>
       </table>
 
@@ -111,6 +133,12 @@ function ReduxExample() {
 
         <AddMarkForm />
       </div>
+
+      <UpdateUserForm
+        user={selectedUser}
+        isOpen={Boolean(selectedUser)}
+        onClose={handleCloseUpdate}
+      />
     </div>
   );
 }

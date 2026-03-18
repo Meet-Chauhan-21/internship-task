@@ -3,7 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   marks: [
     {
-      rno: 431,
+      rno: 1,
       english: 89,
       maths: 78,
       coding: 99,
@@ -24,9 +24,12 @@ export const resultSlice = createSlice({
     removeMark: (state, action) => {
       state.marks = state.marks.filter((d) => d.rno != action.payload);
     },
+    checkPrint:()=>{
+      console.log("print in resultSlice")
+    }
   },
 });
 
-export const { addMark, removeMark, showMark} = resultSlice.actions;
+export const { addMark, removeMark, showMark, checkPrint} = resultSlice.actions;
 
 export default resultSlice.reducer;
