@@ -1,0 +1,44 @@
+# Dependencies
+node_modules/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Runtime data
+pids/
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage and test output
+coverage/
+.nyc_output/
+
+# Build output
+dist/
+build/
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Caches
+.cache/
+.parcel-cache/
+.eslintcache
+
+# OS/editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Optional package manager files
+.pnpm-store/
+.yarn/
