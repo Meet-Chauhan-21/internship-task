@@ -8,11 +8,11 @@ const urlSchema = new mongoose.Schema({
     RedirectURL :{
         type:String,
         required:true,
-        unique:true
+        // unique:true
     },
     History:[
         {
-            timestamps:{type:Number}
+            timestamp:{type:Number}
         }
     ],
 },{ timestamps:true })
