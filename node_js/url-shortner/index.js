@@ -3,8 +3,9 @@ const path = require("path")
 const app = express()
 
 const mongodbConnection = require("./connect")
-const UrlRoutes = require("./routes/url")
+const UrlRoutes = require("./routes/urlRoute")
 const StaticRoutes = require("./routes/staticRoute")
+const AuthRoutes = require("./routes/authRoute")
 require("dotenv").config()
 
 app.use(express.json())
@@ -17,6 +18,8 @@ mongodbConnection()
 
 app.use("/url", UrlRoutes)
 app.use("/", StaticRoutes)
+app.use("/auth", AuthRoutes)
+
 
 app.listen(process.env.PORT,()=>{
     console.log(`server runing on port ${process.env.PORT}`)
