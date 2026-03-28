@@ -1,5 +1,5 @@
 const express = require("express")
-const {generateShortUrl, getUrl, getAnalsis} = require("../controller/urlController")
+const {generateShortUrl, getUrl, getAnalsis} = require("../controller/url.controller")
 const router = express.Router()
 
 router.post("/",generateShortUrl)

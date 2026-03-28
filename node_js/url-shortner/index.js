@@ -3,10 +3,10 @@ const path = require("path")
 const cookieParser = require("cookie-parser");
 const app = express()
 
-const mongodbConnection = require("./src/db/connect")
-const UrlRoutes = require("./src/routes/urlRoute")
-const StaticRoutes = require("./src/routes/staticRoute")
-const AuthRoutes = require("./src/routes/authRoute")
+const mongodbConnection = require("./src/config/db")
+const UrlRoutes = require("./src/routes/url.route")
+const StaticRoutes = require("./src/routes/static.route")
+const AuthRoutes = require("./src/routes/auth.route")
 require("dotenv").config()
 
 app.use(express.json())
