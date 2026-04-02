@@ -1,7 +1,10 @@
 const express = require("express");
-const { uploadWithPath, uploadFullFile, getFileById, getFileByPath } = require("../controller/file.controller");
+const { simpleUpload, uploadWithPath, uploadFullFile, getFileByData, getFileByPath } = require("../controller/file.controller");
 const upload = require("../middleware/upload.middleware");
 const router = express.Router();
+
+// POST /upload → simpleUpload
+router.post("/upload", upload.single("myfile"), simpleUpload);
 
 // POST /upload-path → uploadWithPath
 router.post("/upload-path", upload.single("myfile"), uploadWithPath);
@@ -13,8 +16,9 @@ router.get("/",(_,res)=>{
     return res.render("home")
 })
 
-router.get("/filebyfull/:id",getFileById)
+router.get("/path/:id",getFileByPath)
 
-router.get("/filebypath/:id",getFileByPath)
+router.get("/data/:id",getFileByData)
+
 
 module.exports = router;
