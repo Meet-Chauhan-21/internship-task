@@ -20,7 +20,7 @@ const ShowImage = () => {
 
   const handleImage = async () => {
     try {
-      const response = await axios.get(`http://localhost:8080/file/all-files`);
+      const response = await axios.get(`http://localhost:8080/file/files`);
       setFiles(response.data.files);
     } catch (error) {
       console.error("Error fetching files:", error);

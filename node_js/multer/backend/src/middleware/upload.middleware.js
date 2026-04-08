@@ -1,6 +1,7 @@
 const multer = require("multer");
 const fs = require("fs");
 const path = require("path");
+const { normalizeFolderPath, resolveFolderFsPath } = require("../utils/path");
 
 const uploadDir = path.resolve(__dirname, "../../uploads");
 if (!fs.existsSync(uploadDir)) {
@@ -9,16 +10,22 @@ if (!fs.existsSync(uploadDir)) {
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    let folderPath = req.body.folderPath || "default";
-    console.log(folderPath)
-    folderPath = path.normalize(folderPath);
+    let folderPath =
+      req.headers["x-folder-path"] || req.query.folderPath || req.body.folderPath || "";
 
-    const uploadPath = path.join(uploadDir, folderPath);
+    try {
+      folderPath = normalizeFolderPath(folderPath);
+    } catch (error) {
+      return cb(error, null);
+    }
+
+    const uploadPath = resolveFolderFsPath(uploadDir, folderPath);
 
     if (!fs.existsSync(uploadPath)) {
-      // fs.mkdirSync(uploadPath, { recursive: true });
       return cb(new Error("Folder does not exist. Please create the folder first."), null);
     }
+
+    req.uploadFolderPath = folderPath;
 
     cb(null, uploadPath);
   },

@@ -1,7 +1,6 @@
 const FileModel = require("../model/File");
 const FolderModel = require("../model/Folder");
-const fs = require("fs");
-const path = require("path");
+const { normalizeFolderPath, buildPublicFileUrl } = require("../utils/path");
 
 const uploadFile = async (req, res) => {
   try {
@@ -9,16 +8,29 @@ const uploadFile = async (req, res) => {
       return res.status(400).json({ message: "No file uploaded" });
     }
 
-    let folderPath = req.body.folderPath || "default";
-    folderPath = path.normalize(folderPath);
-
-    const fileUrl = `${req.protocol}://${req.get("host")}/uploads/${folderPath}/${req.file.filename}`;
+    const folderPath = normalizeFolderPath(
+      req.uploadFolderPath ||
+        req.headers["x-folder-path"] ||
+        req.body.folderPath ||
+        req.query.folderPath ||
+        "",
+    );
 
     let folder = await FolderModel.findOne({ path: folderPath });
 
     if (!folder) {
-      return res.status(400).json({ message: "Folder does not exist. Please create the folder first." });
+      if (!folderPath) {
+        folder = await FolderModel.findOneAndUpdate(
+          { path: "" },
+          { $setOnInsert: { folderName: "root", path: "" } },
+          { new: true, upsert: true },
+        );
+      } else {
+        return res.status(400).json({ message: "Folder does not exist. Please create the folder first." });
+      }
     }
+
+    const fileUrl = buildPublicFileUrl(req, folderPath, req.file.filename);
 
     const saved = await FileModel.create({
       fileName: req.file.originalname,

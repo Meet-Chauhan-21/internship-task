@@ -1,4 +1,3 @@
-import ShowFiles from './components/ShowFiles'
 import Home from './pages/Home'
 
 function App() {
