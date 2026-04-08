@@ -1,6 +1,10 @@
 # Dependencies
 node_modules/
 
+node_js/multer/backend/uploads/
+node_modules/
+*.exe
+
 # Logs
 logs/
 *.log
