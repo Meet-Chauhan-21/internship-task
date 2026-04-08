@@ -1,6 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const FileRoutes = require("./src/routes/file.route");
+const FolderRoutes = require("./src/routes/folder.route");
 const path = require("path");
 const app = express();
 
@@ -15,6 +16,7 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 
 app.use("/file", FileRoutes);
+app.use("/folder", FolderRoutes);
 
 
 // database connection

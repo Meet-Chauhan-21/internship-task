@@ -1,10 +1,10 @@
 import ShowFiles from './components/ShowFiles'
+import Home from './pages/Home'
 
 function App() {
   return (
     <>
-      <h2 className='text-black-700 text-center m-6 font-bold text-2xl'>all images</h2>
-      <ShowFiles></ShowFiles>
+      <Home></Home>
 
     </>
   )
