@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useRef, useState, type FormEvent } from "react";
+import { useRef, useState } from "react";
 
 type OperationProps = {
   selectedPath: string;
@@ -12,7 +12,7 @@ const Operation = ({ selectedPath, getSelectedPath, onSuccess }: OperationProps)
   const [file, setFile] = useState<File | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
-  const createFolder = async (event: FormEvent<HTMLFormElement>) => {
+  const createFolder = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     try {
@@ -46,7 +46,7 @@ const Operation = ({ selectedPath, getSelectedPath, onSuccess }: OperationProps)
     }
   };
 
-  const uploadFile = async (event: FormEvent<HTMLFormElement>) => {
+  const uploadFile = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     try {
