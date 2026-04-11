@@ -1,7 +1,7 @@
 type PreviewFile = {
   fileName: string;
   contentType?: string;
-  customeURL?: string;
+  relativePath?: string;
 };
 
 type FilePreviewModelProps = {
@@ -12,7 +12,15 @@ type FilePreviewModelProps = {
 const FilePreviewModel = ({ file, onClose }: FilePreviewModelProps) => {
   if (!file) return null;
 
-  const sourceUrl = file.customeURL || "";
+  const encodedRelativePath = (file.relativePath || "")
+    .split("/")
+    .filter(Boolean)
+    .map((segment) => encodeURIComponent(segment))
+    .join("/");
+
+  const sourceUrl = encodedRelativePath
+    ? `http://localhost:8080/uploads/${encodedRelativePath}`
+    : "";
   const pdfUrl = sourceUrl
     ? `${sourceUrl}#toolbar=0&navpanes=0&scrollbar=0`
     : "";
@@ -20,12 +28,10 @@ const FilePreviewModel = ({ file, onClose }: FilePreviewModelProps) => {
     ? `https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(sourceUrl)}`
     : "";
 
-  const isImage = file.contentType?.startsWith("image/");
-  const isPdf = file.contentType === "application/pdf";
-  const isWord =
-    file.contentType === "application/msword" ||
-    file.contentType ===
-      "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+  const extension = (file.contentType || "").toLowerCase();
+  const isImage = ["jpg", "jpeg", "png", "gif", "webp", "bmp", "svg", "avif"].includes(extension);
+  const isPdf = extension === "pdf";
+  const isWord = extension === "doc" || extension === "docx";
 
   return (
     <div

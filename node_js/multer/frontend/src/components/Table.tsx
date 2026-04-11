@@ -1,4 +1,11 @@
 import { useState } from "react";
+import {
+  Document20Regular,
+  DocumentPdf20Regular,
+  DocumentText20Regular,
+  Folder20Regular,
+  Image20Regular,
+} from "@fluentui/react-icons";
 import FilePreviewModel from "./FilePreviewModel";
 
 type FolderItem = {
@@ -11,8 +18,8 @@ type FileItem = {
   _id: string;
   fileName: string;
   contentType: string;
-  customeURL?: string;
-  folderId?: FolderItem;
+  relativePath: string;
+  fullPath: string;
 };
 
 type TableProps = {
@@ -23,65 +30,60 @@ type TableProps = {
 };
 
 const getFileTypeInfo = (file: FileItem) => {
-  const extension = file.fileName.split(".").pop()?.toLowerCase() || "file";
+  const extension = (file.contentType || file.fileName.split(".").pop() || "file").toLowerCase();
 
-  if (file.contentType?.startsWith("image/")) {
-    return { icon: "🖼", label: extension.toUpperCase() };
+  if (["jpg", "jpeg", "png", "gif", "webp", "bmp", "svg", "avif"].includes(extension)) {
+    return { extension, Icon: Image20Regular, iconClass: "text-emerald-600" };
   }
 
   if (extension === "pdf") {
-    return { icon: "📕", label: "PDF" };
+    return { extension, Icon: DocumentPdf20Regular, iconClass: "text-red-600" };
   }
 
   if (extension === "doc" || extension === "docx") {
-    return { icon: "📘", label: extension.toUpperCase() };
+    return { extension, Icon: DocumentText20Regular, iconClass: "text-blue-600" };
   }
 
-  return { icon: "📄", label: extension.toUpperCase() };
+  return { extension, Icon: Document20Regular, iconClass: "text-gray-600" };
 };
 
 const Table = ({ currentPath, folders, files, onOpenFolder }: TableProps) => {
   const [selectedFile, setSelectedFile] = useState<FileItem | null>(null);
-  const [selectedRowId, setSelectedRowId] = useState<string | null>(null);
+  const isEmpty = folders.length === 0 && files.length === 0;
 
   return (
     <div className="flex justify-center items-center">
-      <div className="w-full max-w-[800px] overflow-x-auto">
-        <table className="table-fixed min-w-[560px] w-full border-separate border-2 rounded-md border-gray-300 mt-2 sm:mt-4 bg-white text-sm sm:text-base">
-          <thead className="bg-gray-200 text-left">
+      <div className="w-full max-w-[800px] mt-1 sm:mt-2 overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
+        <table className="table-fixed min-w-[560px] w-full text-sm sm:text-base">
+          <thead className="bg-gray-50 text-left">
             <tr>
-              <th className="w-[180px] p-2 pl-3 sm:pl-4">Type</th>
-              <th className="w-[380px] p-2 pl-3 sm:pl-4">Name</th>
+              <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wide text-gray-600 sm:px-5">
+                Name
+              </th>
             </tr>
           </thead>
           <tbody>
-            {folders.length === 0 && files.length === 0 ? (
+            {isEmpty ? (
               <tr>
-                <td className="p-4 text-gray-500" colSpan={2}>
+                <td className="px-4 py-8 text-center text-gray-500 sm:px-5" colSpan={1}>
                   No folders or files in {currentPath || "root"}
                 </td>
               </tr>
             ) : (
               <>
                 {folders.map((folder) => {
-                  const isSelected = selectedRowId === folder._id;
-
                   return (
                     <tr
                       key={folder._id}
-                      onClick={() => setSelectedRowId(folder._id)}
-                      onDoubleClick={() => onOpenFolder(folder.path)}
-                      className={`cursor-pointer border-b-2 ${
-                        isSelected ? "bg-blue-50" : "hover:bg-gray-50"
-                      }`}
+                      onClick={() => onOpenFolder(folder.path)}
+                      className="cursor-pointer border-b border-gray-100 transition-colors hover:bg-slate-50"
                     >
-                      <td className="p-2 pl-3 sm:pl-4 border-r-8 border-b-2">
-                        <span className="font-medium">Folder</span>
-                      </td>
-                      <td className="p-2 pl-3 sm:pl-4 border-b-2 font-medium">
-                        <span className="inline-flex items-center gap-2">
-                          <span aria-hidden="true">📁</span>
-                          <span>{folder.folderName}</span>
+                      <td className="px-4 py-2.5 sm:px-5">
+                        <span className="inline-flex items-center gap-2.5 font-medium text-gray-800">
+                          <span className="inline-flex h-7 w-7 items-center justify-center rounded-md bg-amber-50">
+                            <Folder20Regular className="text-amber-600" aria-hidden="true" />
+                          </span>
+                          <span className="truncate">{folder.folderName}</span>
                         </span>
                       </td>
                     </tr>
@@ -89,25 +91,21 @@ const Table = ({ currentPath, folders, files, onOpenFolder }: TableProps) => {
                 })}
 
                 {files.map((file) => {
-                  const isSelected = selectedRowId === file._id;
                   const fileType = getFileTypeInfo(file);
+                  const FileTypeIcon = fileType.Icon;
 
                   return (
                     <tr
                       key={file._id}
-                      onClick={() => setSelectedRowId(file._id)}
-                      onDoubleClick={() => setSelectedFile(file)}
-                      className={`cursor-pointer border-b-2 ${
-                        isSelected ? "bg-blue-50" : "hover:bg-gray-50"
-                      }`}
+                      onClick={() => setSelectedFile(file)}
+                      className="cursor-pointer border-b border-gray-100 transition-colors hover:bg-slate-50"
                     >
-                      <td className="p-2 pl-3 sm:pl-4 border-r-8 border-b-2">
-                        <span className="font-medium">{fileType.label}</span>
-                      </td>
-                      <td className="p-2 pl-3 sm:pl-4 border-b-2">
-                        <span className="inline-flex items-center gap-2">
-                          <span aria-hidden="true">{fileType.icon}</span>
-                          <span>{file.fileName}</span>
+                      <td className="px-4 py-2.5 sm:px-5">
+                        <span className="inline-flex items-center gap-2.5 text-gray-700">
+                          <span className="inline-flex h-7 w-7 items-center justify-center rounded-md bg-gray-50">
+                            <FileTypeIcon className={fileType.iconClass} aria-hidden="true" />
+                          </span>
+                          <span className="truncate">{file.fileName}</span>
                         </span>
                       </td>
                     </tr>

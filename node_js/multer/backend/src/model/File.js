@@ -1,14 +1,28 @@
 const mongoose = require("mongoose");
 
-const uploadFileSchema = new mongoose.Schema(
+const entrySchema = new mongoose.Schema(
   {
-    fileName: { type: String, required: [true, "File name is required"] },
-    customeURL: { type: String, required: [true, "Custom URL is required"] },
-    contentType: { type: String, required: [true, "Content type is required"] },
-    folderId: { type: mongoose.Schema.Types.ObjectId, ref: "Folder", required: [true, "Folder ID is required"] },
-  },{ timestamps: true }
+    name: { type: String, required: [true, "Name is required"], trim: true },
+    isFolder: { type: Boolean, required: true },
+    relativePath: {
+      type: String,
+      required: [true, "Relative path is required"],
+      unique: true,
+      index: true,
+    },
+    fullPath: {
+      type: String,
+      required: [true, "Full path is required"],
+      unique: true,
+      index: true,
+    },
+    contentType: { type: String, default: null },
+  },
+  { timestamps: true }
 );
 
-const FileModel = mongoose.model("File", uploadFileSchema);
+entrySchema.index({ isFolder: 1, relativePath: 1 });
+
+const FileModel = mongoose.model("File", entrySchema);
 
 module.exports = FileModel;

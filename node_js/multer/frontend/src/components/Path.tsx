@@ -1,3 +1,5 @@
+import { ChevronRight12Regular, Desktop20Regular } from "@fluentui/react-icons";
+
 type PathProps = {
   currentPath: string;
   onSelectPath: (path: string) => void;
@@ -6,44 +8,35 @@ type PathProps = {
 const Path = ({ currentPath, onSelectPath }: PathProps) => {
   const segments = currentPath ? currentPath.split("/").filter(Boolean) : [];
 
+  if (segments.length === 0) {
+    return null;
+  }
+
   return (
     <div className="flex justify-center items-center">
-      <div className="border-2 border-gray-300 rounded-md p-3 sm:p-4 w-full max-w-[800px] text-base sm:text-xl bg-white">
-        <div className="flex items-center justify-between gap-4 flex-wrap">
-          <h2 className="font-semibold">Path</h2>
-
+      <div className="w-full max-w-[800px] text-base sm:text-xl bg-white">
+        <div className="flex flex-wrap items-center gap-1 rounded-md border border-gray-200 bg-gray-50 px-2 py-1.5 text-sm sm:text-base text-gray-700">
           <button
             onClick={() => onSelectPath("")}
-            className="shrink-0 border border-gray-400 px-3 py-1 rounded-md text-sm hover:bg-gray-100"
+            className="rounded p-1 hover:bg-white"
+            aria-label="PC Root"
+            title="PC Root"
           >
-            Root
-          </button>
-        </div>
-
-        <div className="mt-3 flex flex-wrap items-center gap-2 text-sm sm:text-base break-all text-gray-700">
-          <button
-            onClick={() => onSelectPath("")}
-            className={`rounded-md px-2 py-1 ${
-              currentPath === ""
-                ? "bg-blue-600 text-white"
-                : "hover:bg-gray-100"
-            }`}
-          >
-            /root
+            <Desktop20Regular className="text-gray-700" />
           </button>
 
           {segments.map((segment, index) => {
             const targetPath = segments.slice(0, index + 1).join("/");
 
             return (
-              <div key={targetPath} className="flex items-center gap-2">
-                <span className="text-gray-400">/</span>
+              <div key={targetPath} className="flex items-center gap-1">
+                <ChevronRight12Regular className="text-gray-400" />
                 <button
                   onClick={() => onSelectPath(targetPath)}
-                  className={`rounded-md px-2 py-1 ${
-                    currentPath === targetPath
-                      ? "bg-blue-600 text-white"
-                      : "hover:bg-gray-100"
+                  className={`rounded px-1.5 py-0.5 ${
+                    index === segments.length - 1
+                      ? "bg-white text-gray-900"
+                      : "hover:bg-white"
                   }`}
                 >
                   {segment}
