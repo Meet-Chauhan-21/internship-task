@@ -65,40 +65,40 @@ const Home = () => {
   };
 
   const uploadFile = async (file: File) => {
-    try {
-      const activePath = currentPathRef.current;
+    const activePath = currentPathRef.current;
 
-      const formData = new FormData();
-      formData.append("folderPath", activePath);
-      formData.append("myfile", file);
+    const formData = new FormData();
+    formData.append("folderPath", activePath);
+    formData.append("myfile", file);
 
-      await axios.post(
-        `http://localhost:8080/file/upload?folderPath=${encodeURIComponent(activePath)}`,
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-            "x-folder-path": activePath,
-          },
+    await axios.post(
+      `http://localhost:8080/file/upload?folderPath=${encodeURIComponent(activePath)}`,
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          "x-folder-path": activePath,
         },
-      );
-
-      alert("File uploaded successfully");
-      await loadContents(activePath);
-    } catch (error) {
-      console.error("Error uploading file:", error);
-      alert("Failed to upload file");
-    }
+      },
+    );
   };
 
   const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const selectedFile = event.target.files?.[0];
+    const selectedFiles = Array.from(event.target.files || []);
 
-    if (!selectedFile) {
+    if (selectedFiles.length === 0) {
       return;
     }
 
-    await uploadFile(selectedFile);
+    try {
+      await Promise.all(selectedFiles.map((file) => uploadFile(file)));
+      alert("Files uploaded successfully");
+      await loadContents(currentPathRef.current);
+    } catch (error) {
+      console.error("Error uploading files:", error);
+      alert("Failed to upload files");
+    }
+
     event.target.value = "";
   };
 
@@ -130,6 +130,7 @@ const Home = () => {
             <input
               ref={fileInputRef}
               type="file"
+              multiple
               className="hidden"
               onChange={handleFileChange}
             />

@@ -44,16 +44,9 @@ const isDirectChildPath = (parentPath = "", childPath = "") => {
   return getParentFolderPath(normalizedChildPath) === normalizedParentPath;
 };
 
-const buildPublicFileUrl = (req, folderPath, fileName) => {
-  const normalizedPath = normalizeFolderPath(folderPath);
-  const folderSegment = normalizedPath ? `${normalizedPath}/` : "";
-  return `${req.protocol}://${req.get("host")}/uploads/${folderSegment}${fileName}`;
-};
-
 module.exports = {
   normalizeFolderPath,
   resolveFolderFsPath,
   getParentFolderPath,
   isDirectChildPath,
-  buildPublicFileUrl,
 };

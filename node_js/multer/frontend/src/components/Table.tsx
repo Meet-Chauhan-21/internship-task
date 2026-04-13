@@ -33,18 +33,18 @@ const getFileTypeInfo = (file: FileItem) => {
   const extension = (file.contentType || file.fileName.split(".").pop() || "file").toLowerCase();
 
   if (["jpg", "jpeg", "png", "gif", "webp", "bmp", "svg", "avif"].includes(extension)) {
-    return { extension, Icon: Image20Regular, iconClass: "text-emerald-600" };
+    return { Icon: Image20Regular, iconClass: "text-emerald-600" };
   }
 
   if (extension === "pdf") {
-    return { extension, Icon: DocumentPdf20Regular, iconClass: "text-red-600" };
+    return { Icon: DocumentPdf20Regular, iconClass: "text-red-600" };
   }
 
   if (extension === "doc" || extension === "docx") {
-    return { extension, Icon: DocumentText20Regular, iconClass: "text-blue-600" };
+    return { Icon: DocumentText20Regular, iconClass: "text-blue-600" };
   }
 
-  return { extension, Icon: Document20Regular, iconClass: "text-gray-600" };
+  return { Icon: Document20Regular, iconClass: "text-gray-600" };
 };
 
 const Table = ({ currentPath, folders, files, onOpenFolder }: TableProps) => {
