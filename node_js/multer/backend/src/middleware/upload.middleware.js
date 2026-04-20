@@ -8,6 +8,9 @@ if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir, { recursive: true });
 }
 
+// Blocked file extensions
+const BLOCKED_EXTENSIONS = ["app", "apk", "exe", "msi", "dmg"];
+
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     let folderPath =
@@ -34,9 +37,24 @@ const storage = multer.diskStorage({
     const safeName = file.originalname.replace(/\s+/g, "-");
     cb(null, `${Date.now()}-${safeName}`);
   },
-
 });
 
-const upload = multer({ storage });
+const fileFilter = (req, file, cb) => {
+  const ext = file.originalname.split(".").pop()?.toLowerCase();
+  
+  if (BLOCKED_EXTENSIONS.includes(ext)) {
+    return cb(new Error(`File type .${ext} is not allowed`));
+  }
+  
+  cb(null, true);
+};
+
+const upload = multer({ 
+  storage,
+  fileFilter,
+  limits: {
+    fileSize: 100 * 1024 * 1024 // 100MB limit
+  }
+});
 
 module.exports = upload;

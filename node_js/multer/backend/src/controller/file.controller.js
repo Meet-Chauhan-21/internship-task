@@ -1,5 +1,7 @@
 const FileModel = require("../model/File");
-const { normalizeFolderPath } = require("../utils/path");
+const { normalizeFolderPath, getParentFolderPath } = require("../utils/path");
+const fs = require("fs");
+const path = require("path");
 
 const toPublicFileDto = (entry) => ({
   _id: entry._id,
@@ -13,6 +15,8 @@ const getExtension = (fileName = "") => {
   const ext = String(fileName).split(".").pop()?.trim().toLowerCase();
   return ext && ext !== fileName.toLowerCase() ? ext : "file";
 };
+
+const isInvalidEntryName = (name = "") => /[\\/]/.test(String(name));
 
 const uploadFile = async (req, res) => {
   try {
@@ -95,9 +99,103 @@ const getFileByPath = async (req, res) => {
   }
 };
 
+const deleteFile = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const file = await FileModel.findOne({ _id: id, isFolder: false });
+
+    if (!file) {
+      return res.status(404).json({ message: "File not found" });
+    }
+
+    // Delete physical file
+    if (fs.existsSync(file.fullPath)) {
+      fs.unlinkSync(file.fullPath);
+    }
+
+    // Delete from database
+    await FileModel.deleteOne({ _id: id });
+
+    res.status(200).json({ message: "File deleted successfully" });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+const renameFile = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const newName = String(req.body?.newName || "").trim();
+
+    if (!newName) {
+      return res.status(400).json({ message: "New name is required" });
+    }
+
+    if (isInvalidEntryName(newName)) {
+      return res.status(400).json({ message: "File name cannot contain path separators" });
+    }
+
+    const file = await FileModel.findOne({ _id: id, isFolder: false });
+
+    if (!file) {
+      return res.status(404).json({ message: "File not found" });
+    }
+
+    // Get the directory and extension
+    const fileDir = path.dirname(file.fullPath);
+    const newFullPath = path.join(fileDir, newName);
+
+    // Rename physical file
+    if (fs.existsSync(file.fullPath)) {
+      fs.renameSync(file.fullPath, newFullPath);
+    }
+
+    // Get parent folder path
+    const parentFolder = getParentFolderPath(file.relativePath);
+    const newRelativePath = normalizeFolderPath(parentFolder ? `${parentFolder}/${newName}` : newName);
+
+    // Update in database
+    const updatedFile = await FileModel.findByIdAndUpdate(
+      id,
+      { name: newName, fullPath: newFullPath, relativePath: newRelativePath },
+      { new: true }
+    );
+
+    res.status(200).json({
+      message: "File renamed successfully",
+      file: toPublicFileDto(updatedFile),
+    });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+const downloadFile = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const file = await FileModel.findOne({ _id: id, isFolder: false });
+
+    if (!file) {
+      return res.status(404).json({ message: "File not found" });
+    }
+
+    if (!fs.existsSync(file.fullPath)) {
+      return res.status(404).json({ message: "File not found on server" });
+    }
+
+    res.download(file.fullPath, file.name);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
 
 module.exports = {
   uploadFile,
   getFileByPath,
   getAllFiles,
+  deleteFile,
+  renameFile,
+  downloadFile,
 };

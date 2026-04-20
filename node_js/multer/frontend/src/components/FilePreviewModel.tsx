@@ -4,11 +4,12 @@ import {
   DocumentPdf24Regular,
   DocumentText24Regular,
   Image24Regular,
-  SlideGrid24Regular,
   TextFont24Regular,
 } from "@fluentui/react-icons";
+import { FileSpreadsheet, Presentation, Table2 } from "lucide-react";
 import { renderAsync } from "docx-preview";
 import { init as initPptxPreview } from "pptx-preview";
+import * as XLSX from "xlsx";
 
 type PreviewFile = {
   fileName: string;
@@ -26,6 +27,7 @@ const FilePreviewModel = ({ file, onClose }: FilePreviewModelProps) => {
   const pptxContainerRef = useRef<HTMLDivElement | null>(null);
   const pptxViewerRef = useRef<ReturnType<typeof initPptxPreview> | null>(null);
   const [textContent, setTextContent] = useState("");
+  const [gridContent, setGridContent] = useState<string[][]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [previewError, setPreviewError] = useState("");
 
@@ -47,30 +49,37 @@ const FilePreviewModel = ({ file, onClose }: FilePreviewModelProps) => {
   const isImage = ["jpg", "jpeg", "png", "gif", "webp", "bmp", "svg", "avif"].includes(extension);
   const isPdf = extension === "pdf";
   const isText = extension === "txt";
+  const isCsv = extension === "csv";
+  const isExcel = ["xls", "xlsx"].includes(extension);
   const isDocx = extension === "docx";
-  const isPptx = extension === "pptx";
+  const isPptx = ["ppt", "pptx"].includes(extension);
 
   const getPreviewIcon = () => {
     if (isImage) return <Image24Regular className="text-emerald-700" />;
     if (isPdf) return <DocumentPdf24Regular className="text-red-700" />;
+    if (isCsv) return <Table2 className="text-teal-700" size={22} />;
+    if (isExcel) return <FileSpreadsheet className="text-green-700" size={22} />;
     if (isText) return <TextFont24Regular className="text-slate-700" />;
     if (isDocx) return <DocumentText24Regular className="text-blue-700" />;
-    if (isPptx) return <SlideGrid24Regular className="text-violet-700" />;
+    if (isPptx) return <Presentation className="text-orange-700" size={22} />;
     return <DocumentText24Regular className="text-gray-700" />;
   };
 
   const getPreviewBadgeClass = () => {
     if (isImage) return "bg-emerald-100";
     if (isPdf) return "bg-red-100";
+    if (isCsv) return "bg-teal-100 ring-1 ring-teal-200";
+    if (isExcel) return "bg-green-100 ring-1 ring-green-200";
     if (isText) return "bg-slate-100 ring-1 ring-slate-200";
     if (isDocx) return "bg-blue-100";
-    if (isPptx) return "bg-violet-100 ring-1 ring-violet-200";
+    if (isPptx) return "bg-orange-100 ring-1 ring-orange-200";
     return "bg-gray-100";
   };
 
   useEffect(() => {
     let isActive = true;
     setTextContent("");
+    setGridContent([]);
     setPreviewError("");
     setIsLoading(false);
 
@@ -107,6 +116,74 @@ const FilePreviewModel = ({ file, onClose }: FilePreviewModelProps) => {
         } catch (error) {
           if (isActive) {
             setPreviewError("Unable to load text file preview");
+          }
+        } finally {
+          if (isActive) {
+            setIsLoading(false);
+          }
+        }
+
+        return;
+      }
+
+      if (isCsv) {
+        setIsLoading(true);
+
+        try {
+          const response = await fetch(sourceUrl);
+          const content = await response.text();
+
+          if (isActive) {
+            const rows = content
+              .split(/\r?\n/)
+              .filter((line) => line.trim().length > 0)
+              .map((line) => line.split(","));
+
+            setGridContent(rows.slice(0, 200));
+          }
+        } catch (error) {
+          if (isActive) {
+            setPreviewError("Unable to load CSV preview");
+          }
+        } finally {
+          if (isActive) {
+            setIsLoading(false);
+          }
+        }
+
+        return;
+      }
+
+      if (isExcel) {
+        setIsLoading(true);
+
+        try {
+          const response = await fetch(sourceUrl);
+          const buffer = await response.arrayBuffer();
+
+          if (!isActive) {
+            return;
+          }
+
+          const workbook = XLSX.read(buffer, { type: "array" });
+          const firstSheetName = workbook.SheetNames[0];
+
+          if (!firstSheetName) {
+            setPreviewError("No sheets found in Excel file");
+            return;
+          }
+
+          const worksheet = workbook.Sheets[firstSheetName];
+          const data = XLSX.utils.sheet_to_json<string[]>(worksheet, {
+            header: 1,
+            defval: "",
+            blankrows: false,
+          });
+
+          setGridContent(data.slice(0, 200));
+        } catch (error) {
+          if (isActive) {
+            setPreviewError("Unable to load Excel preview");
           }
         } finally {
           if (isActive) {
@@ -168,7 +245,7 @@ const FilePreviewModel = ({ file, onClose }: FilePreviewModelProps) => {
       isActive = false;
       clearOfficePreview();
     };
-  }, [sourceUrl, isDocx, isPptx, isText]);
+  }, [sourceUrl, isCsv, isDocx, isExcel, isPptx, isText]);
 
   return (
     <div
@@ -221,6 +298,33 @@ const FilePreviewModel = ({ file, onClose }: FilePreviewModelProps) => {
                 <pre className="whitespace-pre-wrap break-words p-4 text-sm leading-6 text-gray-800">
                   {textContent}
                 </pre>
+              )}
+            </div>
+          ) : isCsv || isExcel ? (
+            <div className="h-[70vh] overflow-auto rounded-xl border border-gray-200 bg-white shadow-sm">
+              {isLoading ? (
+                <div className="flex h-full items-center justify-center text-gray-500">Loading preview...</div>
+              ) : previewError ? (
+                <div className="flex h-full items-center justify-center text-gray-500">{previewError}</div>
+              ) : gridContent.length === 0 ? (
+                <div className="flex h-full items-center justify-center text-gray-500">No preview data</div>
+              ) : (
+                <table className="min-w-full border-collapse text-sm text-gray-700">
+                  <tbody>
+                    {gridContent.map((row, rowIndex) => (
+                      <tr key={`row-${rowIndex}`} className="border-b border-gray-100">
+                        {row.map((cell, cellIndex) => (
+                          <td
+                            key={`cell-${rowIndex}-${cellIndex}`}
+                            className="max-w-[260px] border-r border-gray-100 px-3 py-2 align-top break-words"
+                          >
+                            {String(cell)}
+                          </td>
+                        ))}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               )}
             </div>
           ) : isDocx ? (

@@ -9,6 +9,7 @@ type CreateFolderModelProps = {
 
 const CreateFolderModel = ({ isOpen, onClose, onCreate }: CreateFolderModelProps) => {
   const [folderName, setFolderName] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
   if (!isOpen) {
     return null;
   }
@@ -20,16 +21,18 @@ const CreateFolderModel = ({ isOpen, onClose, onCreate }: CreateFolderModelProps
     const trimmedFolderName = folderName.trim();
 
     if (!trimmedFolderName) {
-      alert("Folder name cannot be empty");
+      setErrorMessage("Folder name cannot be empty");
       return;
     }
 
+    setErrorMessage("");
     await onCreate(trimmedFolderName);
     setFolderName("");
   };
 
   const handleClose = () => {
     setFolderName("");
+    setErrorMessage("");
     onClose();
   };
 
@@ -73,11 +76,19 @@ const CreateFolderModel = ({ isOpen, onClose, onCreate }: CreateFolderModelProps
               id="folderName"
               type="text"
               value={folderName}
-              onChange={(event) => setFolderName(event.target.value)}
+              onChange={(event) => {
+                setFolderName(event.target.value);
+                if (errorMessage) {
+                  setErrorMessage("");
+                }
+              }}
               placeholder="Enter folder name"
               className="w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-sm text-gray-900 outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
               autoFocus
             />
+            {errorMessage && (
+              <p className="text-sm text-red-600">{errorMessage}</p>
+            )}
           </div>
 
           <div className="flex items-center justify-end gap-3 pt-1">

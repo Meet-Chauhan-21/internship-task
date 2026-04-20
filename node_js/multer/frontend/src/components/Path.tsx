@@ -8,14 +8,10 @@ type PathProps = {
 const Path = ({ currentPath, onSelectPath }: PathProps) => {
   const segments = currentPath ? currentPath.split("/").filter(Boolean) : [];
 
-  if (segments.length === 0) {
-    return null;
-  }
-
   return (
     <div className="flex justify-center items-center">
-      <div className="w-full max-w-[800px] text-base sm:text-xl bg-white">
-        <div className="flex flex-wrap items-center gap-1 rounded-md border border-gray-200 bg-gray-50 px-2 py-1.5 text-sm sm:text-base text-gray-700">
+      <div className="w-full max-w-[900px] bg-white">
+        <div className="flex flex-wrap items-center gap-1 rounded-md border border-gray-200 bg-gray-50 px-3 py-2 text-sm sm:text-base text-gray-700">
           <button
             onClick={() => onSelectPath("")}
             className="rounded p-1 hover:bg-white"
